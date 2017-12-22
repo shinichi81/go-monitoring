@@ -22,8 +22,25 @@ From more in-depth practical application of many of the ideas I can strongly
 recommend the excellent book [Implementing Domain-Driven Design](http://www.amazon.com/Implementing-Domain-Driven-Design-Vaughn-Vernon/dp/0321834577)
 by Vaughn Vernon that goes into far greater detail.
 
+_Source: The Clean Architecture_
 
-## Models Layer
+![Clean Architecture](docs/go-cleanarch.png)
+
+
+### Project schema requirements
+
+go-monitoring assumes this files structure:
+
+    [GOPATH]/[PACKAGE_NAME]/[LAYER_NAME]
+
+or
+
+    [GOPATH]/[PACKAGE_NAME]/[MODULE_NAME]/[LAYER_NAME]
+
+
+for this monitoring-alert, we will use 4 layer :
+
+### Models Layer
 This layer is a layer that will save the model in use on the domain and other domains.
 This layer can be accessed by all layers and by all domains
 
