@@ -27,7 +27,7 @@ _Source: The Clean Architecture_
 ![Clean Architecture](docs/go-cleanarch.png)
 
 
-### Project schema requirements
+## Project schema requirements
 
 go-monitoring assumes this files structure:
 
@@ -41,16 +41,19 @@ or
 for this monitoring-alert, we will use 4 layer :
 
 ### Models Layer
+
 This layer is a layer that will save the model in use on the domain and other domains.
 This layer can be accessed by all layers and by all domains
 
+Same as Entities, will used in all layer. This layer, will store any Object’s Struct and it’s method. 
+Example : Article, Student, Book.
+
 ### Repository Layer
-This layer will save the database handler. Querying, Inserting, Deleting will be done in this layer.
-There is no business logic here, just a standard function for input output from data store.
-This layer has the main task of determining what data store in use. It's up to the needs,
-maybe RDBMS (Mysql, PostgreSql, etc.) or NoSql (Mongodb, CouchDB etc.)
-If using architecture microservice, then this layer will serve as a liaison to other services.
-This layer will be bound and dependent on the datastore used.
+Repository will store any Database handler. Querying, or Creating/ Inserting into any database will stored here. This layer will act for CRUD to database only. No business process happen here. Only plain function to Database.
+This layer also have responsibility to choose what DB will used in Application. Could be Mysql, MongoDB, MariaDB, Postgresql whatever, will decided here.
+If using ORM, this layer will control the input, and give it directly to ORM services.
+If calling microservices, will handled here. Create HTTP Request to other services, and sanitize the data. This layer, must fully act as a repository. Handle all data input - output no specific logic happen.
+This Repository layer will depends to Connected DB , or other microservices if exists..
 
 ### Use Case Layer
 This layer will serve as a controller, where the task is to win business logic on every domain.
@@ -71,10 +74,18 @@ For the example project I use, I selected REST API as its delivery layer.
 So, communication between clien / user to my system is done through REST API
 
 
+## Installing
+
+    go get github.com/shinichi81/go-monitoring
+
+## move to project
+
+    cd go-monitoring
 
 
 
 
 
 
+> Make Sure you have install and run all service
 
