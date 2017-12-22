@@ -1,4 +1,5 @@
 # Clean Architecture in Go
+
 An example of "Clean Architecture" in Go to demonstrate developing a testable
 application that can be run on AppEngine with Google Cloud Storage or with
 traditional hosting and MongoDB for storage (but not limited to either).
@@ -21,77 +22,42 @@ From more in-depth practical application of many of the ideas I can strongly
 recommend the excellent book [Implementing Domain-Driven Design](http://www.amazon.com/Implementing-Domain-Driven-Design-Vaughn-Vernon/dp/0321834577)
 by Vaughn Vernon that goes into far greater detail.
 
-Besides the clean codebase, the approaches also bring other advantages - significant
-parts of the system can be unit tested quickly and easily without having to fire
-up the full web stack, something that is often difficult when the dependencies
-go the wrong way (if you need a database and a web-server running to make your
-tests work, you're doing it wrong).
 
-I'd used it before in the world of .NET but forgot about it after moving to coding
-more in Python. After switching languages again (yeah, right) to the wonderful
-world of go I came across a blog post which re-ignited my interest in it:
-[Applying The Clean Architecture to Go applications](http://manuel.kiessling.net/2012/09/28/applying-the-clean-architecture-to-go-applications/)
+## Models Layer
+This layer is a layer that will save the model in use on the domain and other domains.
+This layer can be accessed by all layers and by all domains
 
-It's a great read but I found the example a little overly-complex with too much of
-the focus on relational database model parts and at the same time it was light
-on some issues I wanted to resolve such as switching between different storage types
-and web UI or framework (and Go has so many of those to chose from!).
+### Repository Layer
+This layer will save the database handler. Querying, Inserting, Deleting will be done in this layer.
+There is no business logic here, just a standard function for input output from data store.
+This layer has the main task of determining what data store in use. It's up to the needs,
+maybe RDBMS (Mysql, PostgreSql, etc.) or NoSql (Mongodb, CouchDB etc.)
+If using architecture microservice, then this layer will serve as a liaison to other services.
+This layer will be bound and dependent on the datastore used.
 
-I've also been looking for a way to make my application usable both standalone
-and on AppEngine as well as being easier to test, so this seemed like a good opportunity
-to do some experimenting and this is what I came up with as a prototype which I've
-hopefully simplified to show the techniques.
+### Use Case Layer
+This layer will serve as a controller, where the task is to win business logic on every domain.
+This layer also has the task of selecting what repository to use, and this domain can have more than one repository layer
+The biggest main task of this layer is to connect the datastore (repository layer) with the delivery layer.
+Thus, this layer is also responsible for the validity of data, if something happens invalid data on the repository or delivery,
+then this layer will be in the blame.
+This layer is really pure must logic (bussiness logic), for example: sum total input,
+or nose-compose response where the combination of some repository / model.
+This layer depends on the Repository layer. So changes in the repository on a large scale, can affect this layer.
 
-## Dependency Rings
-We've all heard of n-tier or layered architecture, especially if you've come
-from the world of .NET or Java and it's unfair that it gets a bad rep. Probably
-because it was often implemented so poorly with the typical mistake of everything
-relying on the database layer at the bottom which made software rigid, difficult
-to test and closely tied to the vendor's database implementation (hardly surprising
-that they promoted it so hard).
+### Delivery Layer
+This layer will serve as the presenter or become the output of the application.
+This layer is responsible for determining the delivery method that is in use, can with REST API, HTML, gRPC or File etc.
+Another task of this layer, because it becomes a connecting wall between the user and the system,
+of course, accept all input and validation of inputs according to the standards used.
+For the example project I use, I selected REST API as its delivery layer.
+So, communication between clien / user to my system is done through REST API
 
-Reversing the dependencies though has a wonderful transformative effect on your
-code. Here is my interpretation of the layers or rings implemented using the Go
-language (or 'Golang' for Google).
 
-### Domain
-At the center of the dependencies is the domain. These are the business objects
-or entities and should represent and encapsulate the fundamental business rules
-such as "can a closed customer account create a new order?". There is usually a
-single root object that represents the system and which has the factory methods
-to create other objects (which in turn may have their own methods to create others).
-This is where the domain-driven design lives.
 
-Looking at this should give you an idea of the business model for the application
-and what the system is working with. This package allows code such as unit tests
-to excercise the core parts of the app for testing to ensure that basic rules are
-enforced.
 
-### Engine / Use-Cases
-The application level rules and use-cases orchestrate the domain model and add richer
-rules and logic including persistence. I prefer the term engine for this package
-because it is the engine of what the app actually does. The rules implemented at this
-level should not affect the domain model rules but obviously may depend on them.
-The rules of the application also shouldn't rely on the UI or the persistence
-frameworks being used.
 
-Why would the business rules change depending on what UI framework is the new flavour
-of the month or if we want to change from an RDBMS to MongoDB or some cloud datastore?
-Those are implementation details that pull the levers of the use cases or are used by
-the engine via abstract interfaces.
 
-### Interface Adapters
-These are concerned with converting data from a form that the use-cases handle to
-whatever the external framework and drivers use. A use-case may expect a request
-struct with a set of parameters and return a response struct with the results. The
-public facing part of the app is more likely to expect to send requests as JSON or
-http form posts and return JSON or rendered HTML. The database may return results
-in a structure that needs to be adapted into something the rest of the app can use.
 
-### Frameworks and Drivers
-These are the ports that allow the system to talk to 'outside things' which could be
-a database for persistence or a web server for the UI. None of the inner use cases
-or domain entities should know about the implementation of these layers and they may
-change over time because ... well, we used to store data in SQL, then MongoDB and
-now cloud datastores. Changing the storage should not change the application or any
-of the business rules. I tend to call these "providers" because ... well, .NET.
+
+
