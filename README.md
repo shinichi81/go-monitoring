@@ -43,10 +43,8 @@ for this monitoring-alert, we will use 4 layer :
 ### Models Layer
 
 This layer is a layer that will save the model in use on the domain and other domains.
-This layer can be accessed by all layers and by all domains
-
-Same as Entities, will used in all layer. This layer, will store any Object’s Struct and it’s method. 
-Example : Article, Student, Book.
+This layer can be accessed by all layers and by all domains. Same as Entities, will used in all layer. This layer, will store any Object’s Struct and it’s method. 
+Example : Article, Student, Book, Any entities, or model will stored here.
 
 ### Repository Layer
 Repository will store any Database handler. Querying, or Creating/ Inserting into any database will stored here. This layer will act for CRUD to database only. No business process happen here. Only plain function to Database.

@@ -2,6 +2,6 @@ package account
 
 type Account struct {
 	ID			string
-	username	string
+	Username	string
 	Type		string
 } 
