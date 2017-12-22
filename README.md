@@ -24,7 +24,7 @@ by Vaughn Vernon that goes into far greater detail.
 
 _Source: The Clean Architecture_
 
-![Clean Architecture](docs/go-cleanarch.png)
+![Clean Architecture](https://raw.githubusercontent.com/roblaszczak/go-cleanarch/master/docs/go-cleanarch.png)
 
 
 ### Project schema requirements
