@@ -1,4 +1,4 @@
-# Clean Architecture in Go
+# Clean Architecture in Go [![Build Status](https://travis-ci.org/prometheus/prometheus.svg)][travis]
 
 An example of "Clean Architecture" in Go to demonstrate developing a testable
 application that can be run on AppEngine with Google Cloud Storage or with
